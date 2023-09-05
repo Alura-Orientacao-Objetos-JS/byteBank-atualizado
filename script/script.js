@@ -12,10 +12,19 @@ const graphForDolar = new Chart(graphDolar, {
     }
   });
 
+setInterval(() => connectAPI(), 5000)
+
 async function connectAPI(){
     const connect = await fetch("https://economia.awesomeapi.com.br/json/last/USD-BRL")
     const connectJSON = await connect.json()
     console.log(connectJSON)
 }
 
-connectAPI()
+function getTime(){
+    let date = new Date()
+    let time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+    console.log(time)
+    return time
+}
+
+getTime()
