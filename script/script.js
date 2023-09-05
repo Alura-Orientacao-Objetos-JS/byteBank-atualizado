@@ -14,17 +14,6 @@ const graphForDolar = new Chart(graphDolar, {
     }
   });
 
-setInterval(() => connectAPI(), 5000)
-
-async function connectAPI(){
-    const connect = await fetch("https://economia.awesomeapi.com.br/json/last/USD-BRL")
-    const connectJSON = await connect.json()
-    let time = getTime()
-    let value = connectJSON.USDBRL.ask
-    addData(graphForDolar, time, value)
-    printQuotation("dolar", value)
-}
-
 function getTime(){
     let date = new Date()
     let time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
@@ -38,3 +27,13 @@ function addData(graph, subtitle, data){
     })
     graph.update()
 }
+
+let workerDolar = new Worker('./script/workers/workerDolar.js')
+workerDolar.postMessage('usd')
+
+workerDolar.addEventListener("message", e => {
+    let time = getTime()
+    let value = e.data.ask
+    printQuotation("dolar", value)
+    addData(graphForDolar, time, value)
+})
