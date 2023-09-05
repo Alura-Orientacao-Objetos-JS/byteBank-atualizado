@@ -1,4 +1,4 @@
-import printQuotation from "./printQuotation.js";
+import selectQuotation from "./printQuotation.js";
 
 const graphDolar = document.querySelector('#graficoDolar')
 
@@ -34,6 +34,50 @@ workerDolar.postMessage('usd')
 workerDolar.addEventListener("message", e => {
     let time = getTime()
     let value = e.data.ask
-    printQuotation("dolar", value)
+    selectQuotation("dolar", value)
     addData(graphForDolar, time, value)
+})
+
+const graphYen = document.querySelector('#graficoIene')
+const graphForYen = new Chart(graphYen, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Iene',
+            data: [],
+            borderWidth: 1
+        }]
+    }
+})
+
+let workerIene = new Worker("./script/workers/workerIene.js")
+workerIene.postMessage("iene")
+workerIene.addEventListener("message", e => {
+    let time = getTime()
+    let value = e.data.ask
+    selectQuotation("iene", value)
+    addData(graphForYen, time, value)
+})
+
+const graphPesoArg = document.querySelector('#graficoPesoArg')
+const graphForPesoArg = new Chart(graphPesoArg, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Peso Argentino',
+            data: [],
+            borderWidth: 1
+        }]
+    }
+})
+
+let workerPesoArg = new Worker("./script/workers/workerPesoArg.js")
+workerPesoArg.postMessage("Peso Argentino")
+workerPesoArg.addEventListener("message", e => {
+    let time = getTime()
+    let value = e.data.ask
+    selectQuotation("peso argentino", value)
+    addData(graphForPesoArg, time, value)
 })
